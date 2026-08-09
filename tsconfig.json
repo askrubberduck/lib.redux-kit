@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ES2019", "DOM"],
+    // Matches the `engines.node` floor. Emits CommonJS (no `"type"` in package.json) and resolves
+    // the way Node does, honouring `exports` maps. `moduleResolution` is deliberately absent: with
+    // `node20` the only permitted value is `node16`, which is also the default.
+    "module": "node20",
+    "outDir": "output",
+    "rootDir": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "output", "test"]
+}

@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true,
+    "types": ["mocha", "node"]
+  },
+  "include": ["../src/**/*", "./**/*"],
+  // The root config excludes `test` so it never lands in the published build. `exclude` is
+  // inherited by an extending config, so without overriding it here `include` is silently
+  // overruled and this config typechecks nothing but src.
+  "exclude": ["../node_modules", "../output"]
+}

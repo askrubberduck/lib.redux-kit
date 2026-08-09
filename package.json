@@ -1,0 +1,91 @@
+{
+  "name": "@askrubberduck/redux-kit",
+  "version": "0.5.0",
+  "description": "A small toolkit for redux stores: reducers, effects, watchers, subscriptions, local stores and action versioning.",
+  "author": "askrubberduck",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/askrubberduck/lib.redux-kit.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "main": "output/index.js",
+  "types": "output/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./output/index.d.ts",
+      "default": "./output/index.js"
+    },
+    "./react": {
+      "types": "./output/react.d.ts",
+      "default": "./output/react.js"
+    },
+    "./package.json": "./package.json",
+    "./testing": {
+      "types": "./output/testing.d.ts",
+      "default": "./output/testing.js"
+    },
+    "./store": {
+      "types": "./output/store.d.ts",
+      "default": "./output/store.js"
+    }
+  },
+  "files": [
+    "output/**/*",
+    "skills/**/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf output",
+    "prepare": "npm run build",
+    "check:circular": "dpdm --no-warning --no-tree --exit-code circular:1 './src/**/*.ts'",
+    "pretest": "npm run check:types",
+    "test": "mocha",
+    "prepublishOnly": "npm run build",
+    "check:types": "tsc -p test/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "setimmediate": "^1.0.5"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.21",
+    "react": ">=17",
+    "react-redux": ">=8",
+    "redux": ">=4"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-redux": {
+      "optional": true
+    },
+    "redux": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/chai": "^5.2.3",
+    "@types/lodash": "^4.17.25",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/setimmediate": "^1.0.4",
+    "chai": "^6.2.2",
+    "dpdm": "^4.3.0",
+    "lodash": "^4.18.1",
+    "mocha": "^11.8.0",
+    "prettier": "^3.9.6",
+    "react": "^18.3.1",
+    "react-redux": "^9.3.0",
+    "redux": "^5.0.1",
+    "tsx": "^4.23.11",
+    "typescript": "^7.0.2"
+  }
+}
