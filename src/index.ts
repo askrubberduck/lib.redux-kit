@@ -31,4 +31,5 @@ export type {
 export type { MessageTransport } from './message-router'
 
 // The store host lives at '@askrubberduck/redux-kit/store' — it is the one part that needs redux.
-// React bindings live at '@askrubberduck/redux-kit/react', test helpers at '@askrubberduck/redux-kit/testing'.
+// `useDomain` lives at '@askrubberduck/redux-kit/react', `createReduxHooks` at '.../redux', test
+// helpers at '.../testing'.

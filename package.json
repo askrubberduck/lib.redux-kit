@@ -23,6 +23,10 @@
       "types": "./output/react.d.ts",
       "default": "./output/react.js"
     },
+    "./redux": {
+      "types": "./output/redux.d.ts",
+      "default": "./output/redux.js"
+    },
     "./package.json": "./package.json",
     "./testing": {
       "types": "./output/testing.d.ts",

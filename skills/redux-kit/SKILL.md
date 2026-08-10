@@ -208,6 +208,6 @@ one your task names, not all of them.
 | Task | Read |
 |---|---|
 | Wiring the root store, middleware order, `configure`, adding a domain, `storeDispatch`, "why doesn't my reduce / reaction / watcher ever fire?", `createTestStore` | [reference/store.md](reference/store.md) |
-| `useRedux`, `useReduxDispatch`, selector rules, a domain hosted by a component, `useDomain`, `createDispatchRegistry` | [reference/component.md](reference/component.md) |
+| `useRedux`, `useReduxDispatch`, selector rules, a domain hosted by a component, `useDomain`, `createDispatchRegistry`, which of `/react` and `/redux` a binding lives on | [reference/component.md](reference/component.md) |
 | GraphQL subscriptions, socket messages, an always-on bus, a read-only analytics or telemetry tap: `createSubscriptions`, `createMessageRouter`, `createAuditMiddleware` | [reference/adapters.md](reference/adapters.md) |
 | A slow service racing fast user edits, stale responses overwriting fresh state, `__version`, `__requestVersion` | [reference/versioning.md](reference/versioning.md) |

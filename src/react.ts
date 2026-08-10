@@ -1,8 +1,10 @@
 import React from 'react'
-import { shallowEqual, useSelector } from 'react-redux'
 import { Domain } from './domain'
 import { releaseActionVersion } from './version'
-import { Action, AsyncDispatch, Dispatch, VersionedAction } from './types'
+import { Action, AsyncDispatch, VersionedAction } from './types'
+
+// React only, deliberately: a component-hosted domain needs no store, so this entry must not reach
+// for react-redux. `createReduxHooks`, which does, lives at '@askrubberduck/redux-kit/redux'.
 
 /**
  * Hosts one domain for one component: a private action bus, state seeded per mount, and a lifetime
@@ -33,29 +35,4 @@ export function useDomain<TState, TAction extends Action>(
   )
 
   return [state, dispatch]
-}
-
-/**
- * Reads from the store and hands back `dispatch` alongside the selected values, so a component
- * destructures both in one call.
- *
- * The selector **must return an object** — comparison is always `shallowEqual`. Derive inside the
- * selector rather than in the component body; that is what keeps the comparison meaningful.
- * Selecting a whole domain defeats it entirely.
- */
-export function createReduxHooks<TState, TAction extends Action>(dispatch: Dispatch<TAction>) {
-  const useRedux = <TSelected extends object>(
-    selector: (state: TState) => TSelected,
-  ): TSelected & { dispatch: Dispatch<TAction> } => {
-    const result = useSelector(selector, shallowEqual)
-    // Spread rather than mutate: `useSelector` caches the value it returns and compares the next
-    // selector result against it. Writing `dispatch` onto that cached object would give it one
-    // more key than every future result, so `shallowEqual` would never match again and the
-    // component would re-render on every action.
-    return { ...result, dispatch }
-  }
-
-  const useReduxDispatch = (): { dispatch: Dispatch<TAction> } => ({ dispatch })
-
-  return { useRedux, useReduxDispatch }
 }

@@ -3,14 +3,17 @@
 Reading store state and dispatching from React, and hosting a domain inside one component when
 its state belongs to a single screen.
 
-Two hooks, from `@askrubberduck/redux-kit/react`. `useRedux` reads the global store; `useDomain` hosts one
-domain inside a component.
+Two hooks, on two subpaths. `useRedux` — built by `createReduxHooks` from
+`@askrubberduck/redux-kit/redux` — reads the global store. `useDomain`, from
+`@askrubberduck/redux-kit/react`, hosts one domain inside a component. They are split so that
+`/react` needs only React: a component-hosted domain touches no store, so it pulls in neither
+react-redux nor redux.
 
 ## Reading the store
 
 ```ts
 // hooks/useRedux.ts — once per application
-import { createReduxHooks } from '@askrubberduck/redux-kit/react'
+import { createReduxHooks } from '@askrubberduck/redux-kit/redux'
 import { RootAction, RootState, storeDispatch } from 'app/store'
 
 export const { useRedux, useReduxDispatch } = createReduxHooks<RootState, RootAction>(storeDispatch)
