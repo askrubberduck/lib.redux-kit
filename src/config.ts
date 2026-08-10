@@ -12,8 +12,8 @@ export type Settings = {
   /** Enables per-action logging in local stores. Defaults to false. */
   debug: boolean
   /**
-   * Last-resort handler for an exception thrown by an effect that registered no
-   * `handleException`. Defaults to logging the error.
+   * Last-resort handler for an exception thrown by a reaction in a domain that registered no
+   * `onError`. Defaults to logging the error.
    *
    * Host applications typically surface the failure here, e.g. by dispatching whatever action
    * their notification layer listens for.
