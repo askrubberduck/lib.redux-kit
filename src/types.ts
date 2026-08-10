@@ -37,7 +37,7 @@ export type ReduceHandler<TState, TAction extends Action> =
   | ((state: TState, action: TAction & VersionedAction) => Partial<TState> | void)
 
 /** Recomputes values from state after every reduce that changed something. */
-export type DeriveHandler<TState> = (state: TState) => Partial<TState> | void
+export type RecomputeHandler<TState> = (state: TState) => Partial<TState> | void
 
 /**
  * An action on its way out.

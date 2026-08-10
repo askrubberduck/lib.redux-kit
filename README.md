@@ -37,7 +37,7 @@ export const cart = defineDomain<CartState, CartAction, RootState, RootAction>({
 })
 
 cart.reduce('CART_ADD_ITEM', (state, action) => ({ items: [...state.items, action.item] }))
-cart.derive(state => ({ itemCount: state.items.length }))
+cart.recompute(state => ({ itemCount: state.items.length }))
 
 cart.on('CART_PRICING_REQUEST', async (action, dispatch, state) => {
   const { total } = await api.priceCart(state.cart.items)

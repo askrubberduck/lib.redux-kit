@@ -60,7 +60,7 @@ export type CartState = {
   isPending: boolean
 }
 
-const { reduce, derive } = domain
+const { reduce, recompute } = domain
 
 // synchronous state change — (state, action), matching redux's own reducer signature
 reduce('CART_ADD_ITEM', (state, action) => ({ items: [...state.items, action.item] }))
@@ -69,7 +69,7 @@ reduce('SESSION_SIGN_OUT', initState)                        // the app-wide res
 reduce(['CART_ADD_ITEM', 'CART_SET_QUANTITY'], { isPending: true })   // an array of types
 
 // values computed from this domain's own state, after every reduce that changed something
-derive(state => ({ itemCount: state.items.length }))
+recompute(state => ({ itemCount: state.items.length }))
 ```
 
 ```ts
@@ -144,7 +144,7 @@ Import the action type, never the other domain's state.
 store/cart/
   action.ts     the action union
   domain.ts     creates the domain; the one file every other imports
-  reducer.ts    state type + folds + derive
+  reducer.ts    state type + folds + recompute
   saga.ts       reactions and watchers
   types.ts      shared data types — the entities, not the state or the actions
   index.ts      barrel

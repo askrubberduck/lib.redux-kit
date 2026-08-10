@@ -9,7 +9,7 @@ import {
   Dispatch,
   ExtractAction,
   StoreMiddleware,
-  DeriveHandler,
+  RecomputeHandler,
   ReduceHandler,
   Selector,
   VersionedAction,
@@ -70,7 +70,7 @@ export type Domain<
   ) => void
 
   /** Recomputes values from this domain's own state after every reduce that changed something. */
-  derive: (handler: DeriveHandler<TState>) => void
+  recompute: (handler: RecomputeHandler<TState>) => void
 
   /**
    * Reacts to a *state* change rather than an action. The selector re-runs on every change and
@@ -142,7 +142,7 @@ export function defineDomain<
   const reduceHandlers = new Map<string, ReduceHandler<TState, any>>()
   const onHandlers = new Map<string, any>()
   const watchers = new Map<string, [Selector<TRootState, TRootAction, any>, WatchHandler<any, TRootState, TRootAction>]>()
-  let deriveHandler: DeriveHandler<TState> | undefined
+  let recomputeHandler: RecomputeHandler<TState> | undefined
   let errorHandler: ((action: any, dispatch: AsyncDispatch<TRootAction>, error: any) => Promise<any>) | undefined
 
   const mount = (map: Map<string, any>, type: string | string[], handler: any, what: string) => {
@@ -168,9 +168,9 @@ export function defineDomain<
     set()
   }
 
-  const derive = (handler: DeriveHandler<TState>) =>
-    once('derive', !!deriveHandler, () => {
-      deriveHandler = handler
+  const recompute = (handler: RecomputeHandler<TState>) =>
+    once('recompute', !!recomputeHandler, () => {
+      recomputeHandler = handler
     })
 
   const watch: Domain<TState, TAction, TRootState, TRootAction>['watch'] = (key, selector, handler) => {
@@ -209,7 +209,7 @@ export function defineDomain<
     }
 
     const merged = { ...state, ...next }
-    return deriveHandler ? { ...merged, ...deriveHandler(merged) } : merged
+    return recomputeHandler ? { ...merged, ...recomputeHandler(merged) } : merged
   }
 
   const reducer =
@@ -285,7 +285,7 @@ export function defineDomain<
     initial,
     reduce,
     on,
-    derive,
+    recompute,
     watch,
     onError,
     $: { reducer, middleware, watchers: () => [...watchers.entries()], runLocal, seed },

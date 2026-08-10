@@ -91,11 +91,11 @@ describe('defineDomain', () => {
     })
   })
 
-  describe('derive', () => {
+  describe('recompute', () => {
     it('recomputes after every reduce that changed something', () => {
       const cart = defineDomain<CartState, CartAction>({ name: 'cart', initial: initialCartState })
       cart.reduce('CART_ADD_ITEM', (state, a) => ({ items: [...state.items, { sku: a.sku, quantity: a.quantity }] }))
-      cart.derive(state => ({ itemCount: state.items.length }))
+      cart.recompute(state => ({ itemCount: state.items.length }))
 
       const next = reducerOf(cart)(initialCartState, { type: 'CART_ADD_ITEM', sku: 'a', quantity: 1 })
 
@@ -106,7 +106,7 @@ describe('defineDomain', () => {
       const cart = defineDomain<CartState, CartAction>({ name: 'cart', initial: initialCartState })
       let calls = 0
       cart.reduce('CART_NOOP', state => ({ total: state.total }))
-      cart.derive(state => {
+      cart.recompute(state => {
         calls += 1
         return { itemCount: state.items.length }
       })
@@ -123,7 +123,7 @@ describe('defineDomain', () => {
         initial: initialCartState,
       })
       cart.reduce('CART_ADD_ITEM', (state, a) => ({ items: [...state.items, { sku: a.sku, quantity: a.quantity }] }))
-      cart.derive(state => ({ itemCount: state.items.length }))
+      cart.recompute(state => ({ itemCount: state.items.length }))
 
       const store = createTestStore<RootState, RootAction>({ domains: [cart, sessionDomain()] })
       store.dispatch({ type: 'CART_ADD_ITEM', sku: 'a', quantity: 1 })
@@ -280,7 +280,7 @@ describe('defineDomain', () => {
     const makePanel = () => {
       const panel = defineDomain<CartState, CartAction>({ name: 'cart', initial: initialCartState })
       panel.reduce('CART_ADD_ITEM', (state, a) => ({ items: [...state.items, { sku: a.sku, quantity: a.quantity }] }))
-      panel.derive(state => ({ itemCount: state.items.length }))
+      panel.recompute(state => ({ itemCount: state.items.length }))
       return panel
     }
 

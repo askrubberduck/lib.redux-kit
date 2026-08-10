@@ -87,11 +87,11 @@ export type PanelState = {
 const initState: PanelState = { quantity: 1, unitPrice: 0, subtotal: 0, isConfirming: false }
 
 const localStore = defineDomain<PanelState, PanelAction>({ name: 'checkoutPanel', initial: initState })
-const { reduce, derive, on } = localStore
+const { reduce, recompute, on } = localStore
 
 reduce('PANEL_SET_QUANTITY', (_state, action) => ({ quantity: action.quantity }))
 reduce('PANEL_CONFIRM', { isConfirming: true, error: undefined })
-derive(state => ({ subtotal: state.quantity * state.unitPrice }))
+recompute(state => ({ subtotal: state.quantity * state.unitPrice }))
 
 on('PANEL_CONFIRM', async (_action, dispatch, state) => {
   try {
