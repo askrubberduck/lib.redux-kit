@@ -1,5 +1,6 @@
 import React from 'react'
 import { Domain } from './domain'
+import { notifyWatchers, seedWatchers } from './internal/local-watchers'
 import { releaseActionVersion } from './version'
 import { Action, AsyncDispatch, VersionedAction } from './types'
 
@@ -23,6 +24,14 @@ export function useDomain<TState, TAction extends Action>(
   const [state, setState] = React.useState<TState>(initial)
   const stateRef = React.useRef<TState>(initial)
 
+  // Read once, as the store host does at `createStore`: registration is an import side effect and
+  // has already happened by the time anything mounts.
+  const watchers = React.useMemo(() => domain.$.watchers(), [domain])
+
+  // The watched values, per mount like the state itself. Seeded on the first dispatch rather than
+  // at render, because seeding needs the `dispatch` this hook is still building.
+  const seen = React.useRef<Map<string, unknown>>()
+
   const dispatch: AsyncDispatch<TAction> = React.useCallback(
     async (action: TAction & VersionedAction) => {
       action.__version = action.__version ?? releaseActionVersion()
@@ -30,8 +39,13 @@ export function useDomain<TState, TAction extends Action>(
       const next = domain.$.runLocal(stateRef.current, action, dispatch as AsyncDispatch<any>)
       stateRef.current = next
       setState(next)
+
+      if (watchers.length) {
+        const before = (seen.current ??= seedWatchers(watchers, initial, dispatch))
+        notifyWatchers(watchers, before, next, dispatch)
+      }
     },
-    [domain],
+    [domain, initial, watchers],
   )
 
   return [state, dispatch]

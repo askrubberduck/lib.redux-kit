@@ -9,8 +9,9 @@ The kit has **one unit and two hosts**.
 
 A **domain** owns a piece of state and everything that happens to it. A **store** hosts many
 domains on one shared action bus for the session; a **component** hosts one on a private bus for
-as long as it is mounted. The same domain definition works in either — nothing is available in one
-host and missing from the other.
+as long as it is mounted. Every capability runs under both hosts, with one difference you write
+for: a reaction and a watcher receive the **root state** under a store and this domain's **own
+state** under a component. That is what the last two type parameters declare.
 
 Everything else is an **adapter**: something that turns an outside event into a dispatched action.
 

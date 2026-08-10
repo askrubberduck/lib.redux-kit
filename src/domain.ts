@@ -21,8 +21,10 @@ import {
  * async work they trigger, what is derived from it, and what should happen when it changes.
  *
  * It is the only unit in this kit. A global store hosts many domains on a shared action bus; a
- * component hosts one on a private bus. The domain itself does not know which — the same
- * definition works in both, and nothing here is available in one host and missing from the other.
+ * component hosts one on a private bus. The domain itself does not know which, and every capability
+ * runs under both — with one difference a definition has to be written for: a reaction and a
+ * watcher receive the root state under a store and this domain's own state under a component, which
+ * is what TRootState declares.
  *
  *   TState       this domain's own state
  *   TAction      the actions it folds — widen it to reduce over another domain's actions too
