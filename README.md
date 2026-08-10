@@ -119,6 +119,28 @@ import { useDomain } from '@askrubberduck/redux-kit/react'
 const [state, dispatch] = useDomain(panel)
 ```
 
+A domain never knew which host it was under, so redux is not the only store it can run in. `/zustand`
+hosts the same definitions over a zustand store — same middleware order, same watcher semantics, same
+`await dispatch(...)`:
+
+```ts
+import { createZustandStore } from '@askrubberduck/redux-kit/zustand'
+import { useStore } from 'zustand'
+
+export const store = createZustandStore<RootState, RootAction>({ domains: [cart, session] })
+
+// a real StoreApi, so no Provider and no selector library
+const total = useStore(store, s => s.cart.total)
+```
+
+One behaviour genuinely differs, in this host's favour: zustand skips notifying subscribers when
+`setState` produces a reference-equal state, and a fold already returns the existing state when a
+partial changed nothing — so an action nobody reduced re-renders nothing at all, without a
+`shallowEqual` anywhere. Under redux every dispatch notifies and the selector comparison is what
+stops the render.
+
+What you give up is redux's ecosystem: no devtools, no `enhancer` option, no `react-redux`.
+
 Folds, recomputed values, reactions, watchers and error handling all run in both hosts. **One
 thing genuinely differs, and a domain that ignores it will not survive the move:** `reduce` and
 `recompute` always receive this domain's own state, but a reaction (`on`) and a watcher receive
@@ -165,9 +187,10 @@ createStore<RootState, RootAction>({
 | `configure` | inject logger, debug flag, unhandled-error handler |
 
 Subpaths: `/react` for `useDomain`, `/redux` for `createReduxHooks`, `/store` for `createStore`,
-`/testing` for `createTestStore`, `flush`, `makeStream`, `makeTransport` and the resets. Each one
-carries exactly the peer it needs — `/react` needs only React, `/redux` adds react-redux, `/store`
-needs redux — so a component-hosted domain never pulls a store dependency in.
+`/zustand` for `createZustandStore`, `/testing` for `createTestStore`, `flush`, `makeStream`,
+`makeTransport` and the resets. Each one carries exactly the peer it needs — `/react` needs only
+React, `/redux` adds react-redux, `/store` needs redux, `/zustand` needs zustand and nothing else —
+so a component-hosted domain never pulls a store dependency in.
 
 ## Two rules that are easy to get wrong
 

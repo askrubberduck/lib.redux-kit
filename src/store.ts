@@ -6,14 +6,10 @@ import {
   Reducer,
   StoreEnhancer,
 } from 'redux'
-import { getConfig } from './config'
-import { wrapAsyncDispatch } from './dispatch'
-import { isEqual } from './internal/diff'
+import { attachWatchers, buildChain, collectReducers } from './internal/host'
 import { registerStore } from './registry'
 import { HostedDomain } from './domain'
-import { createSubscriptionMiddleware } from './subscription-middleware'
-import { versionMiddleware } from './version'
-import { Action, StoreMiddleware, StateSource, Selector, Subscriber, WatchHandler } from './types'
+import { Action, StoreMiddleware, StateSource, Subscriber } from './types'
 
 // Lives behind the '@askrubberduck/redux-kit/store' subpath because it is the one part that needs redux
 // itself. The root entry stays dependency-free, so a consumer using only domains and a component
@@ -68,24 +64,8 @@ export function createStore<TState, TAction extends Action>(
 ): Store<TState, TAction> {
   const { domains, middleware, adapters = {}, enhancer, reducers, preloadedState } = options
 
-  const reducerMap: Record<string, Reducer<any, any>> = { ...reducers }
-  for (const domain of domains) {
-    // A domain with no state contributes reactions and watchers but takes no key.
-    if (!domain.$.reducer) {
-      continue
-    }
-    if (reducerMap[domain.name]) {
-      throw new Error(`Unable to mount domain '${domain.name}': the name is already taken`)
-    }
-    reducerMap[domain.name] = domain.$.reducer as Reducer<any, any>
-  }
-
-  const reactions = domains.map(s => s.$.middleware)
-  const chain: StoreMiddleware<any, any>[] = [
-    versionMiddleware as StoreMiddleware<any, any>,
-    ...(adapters.subscribers?.length ? [createSubscriptionMiddleware<any, any, any>(...adapters.subscribers)] : []),
-    ...(middleware ? middleware(reactions) : reactions),
-  ]
+  const reducerMap = collectReducers(domains, reducers as Record<string, any> | undefined)
+  const chain = buildChain(domains, adapters.subscribers, middleware)
 
   const middlewareEnhancer = applyMiddleware(...(chain as unknown as Middleware[]))
 
@@ -107,54 +87,4 @@ export function createStore<TState, TAction extends Action>(
   registerStore(store as StateSource<any, any>)
 
   return store
-}
-
-/**
- * Subscribes every domain's watchers. Watch keys are global to the store, so a collision across
- * two domains is a bug rather than a merge, and throws here at boot.
- */
-function attachWatchers<TState, TAction extends Action>(store: Store<TState, TAction>, domains: HostedDomain[]): void {
-  const attached = new Set<string>()
-
-  for (const domain of domains) {
-    for (const [key, [selector, handler]] of domain.$.watchers()) {
-      if (attached.has(key)) {
-        throw new Error(`Unable to attach watcher '${key}': the key is already taken`)
-      }
-      store.subscribe(createWatcher(store, selector, handler))
-      attached.add(key)
-    }
-  }
-}
-
-/**
- * Turns a watcher registration into a store subscriber: re-run the selector, fire only on a real
- * change. Handler errors are swallowed and logged — a watcher must never break the dispatch that
- * triggered it, and its value still advances so it does not re-fire in a loop.
- *
- * Note the cost: the selector receives a fresh `{ ...state, dispatch }`, so each watcher spreads
- * the root state on every store notification.
- */
-function createWatcher<T, TState, TAction extends Action>(
-  store: Store<TState, TAction>,
-  selector: Selector<TState, TAction, T>,
-  handle: WatchHandler<T, TState, TAction>,
-) {
-  let current = selector({ ...store.getState(), dispatch: store.dispatch })
-  const asyncDispatch = wrapAsyncDispatch(store.dispatch)
-
-  return async () => {
-    const state = store.getState()
-    const next = selector({ ...state, dispatch: store.dispatch })
-
-    if (!isEqual(current, next)) {
-      const previous = current
-      current = next
-      try {
-        await handle(next, previous, asyncDispatch, state)
-      } catch (error: any) {
-        getConfig().logger.error('Unhandled error while calling watch handler', error?.message)
-      }
-    }
-  }
 }

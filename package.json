@@ -35,6 +35,10 @@
     "./store": {
       "types": "./output/store.d.ts",
       "default": "./output/store.js"
+    },
+    "./zustand": {
+      "types": "./output/zustand.d.ts",
+      "default": "./output/zustand.js"
     }
   },
   "files": [
@@ -60,7 +64,8 @@
   "peerDependencies": {
     "react": ">=17",
     "react-redux": ">=8",
-    "redux": ">=4"
+    "redux": ">=4",
+    "zustand": ">=5"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -70,6 +75,9 @@
       "optional": true
     },
     "redux": {
+      "optional": true
+    },
+    "zustand": {
       "optional": true
     }
   },
@@ -86,6 +94,7 @@
     "react-redux": "^9.3.0",
     "redux": "^5.0.1",
     "tsx": "^4.23.11",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "zustand": "^5.0.14"
   }
 }
