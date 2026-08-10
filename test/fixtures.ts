@@ -1,5 +1,3 @@
-import 'setimmediate'
-
 // A deliberately generic domain: a cart whose totals are recomputed by a slow pricing service,
 // and a session that can sign in and out. Between them they exercise every capability a domain
 // has — optimistic edits racing a response, derived values, a reset action, and a watcher.

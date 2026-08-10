@@ -1,7 +1,7 @@
 # @askrubberduck/redux-kit
 
 A layer over redux that collapses one feature's moving parts — its reducers, the async work its
-actions trigger, its derived values, its state watchers and its error handling — into a single
+actions trigger, its recomputed values, its state watchers and its error handling — into a single
 object called a **domain**, and runs that object in either of two places: the application's redux
 store, or one React component for as long as it is mounted.
 
@@ -29,7 +29,7 @@ after the fold.
 
 **State belonging to one screen has no good home.** A global slice outlives the screen and needs a
 reset action someone will forget; `useReducer` plus `useEffect` is a second architecture with no
-derived values and no error path. `useDomain` hosts the same domain definition on a private bus,
+recomputed values and no error path. `useDomain` hosts the same domain definition on a private bus,
 seeded per mount, discarded on unmount.
 
 **Dependent async work has no ordering primitive.** `await dispatch(...)` resolves once the entire
@@ -65,9 +65,10 @@ creators — you write the action union and dispatch plain objects.
 npm install @askrubberduck/redux-kit
 ```
 
-There are no required peers. The root entry carries `dequal` and `setimmediate` itself and pulls in
-neither redux nor React. Add `react` for `/react`, `react-redux` for `/redux`, and `redux` for
-`/store` — each is an optional peer, declared so npm does not install one you never import.
+There are no required peers, and one dependency: `dequal`, for the structural comparison a fold and
+a watcher both need. The root entry pulls in neither redux nor React. Add `react` for `/react`,
+`react-redux` for `/redux`, and `redux` for `/store` — each is an optional peer, declared so npm
+does not install one you never import.
 
 ## A domain
 
@@ -155,7 +156,7 @@ createStore<RootState, RootAction>({
 
 | Export | Purpose |
 |---|---|
-| `defineDomain` | the only authoring API: state, folds, reactions, derived values, watchers, error handling |
+| `defineDomain` | the only authoring API: state, folds, reactions, recomputed values, watchers, error handling |
 | `createSubscriptions` | live channels opened per key, with a lifecycle the store owns |
 | `createMessageRouter` | routes messages from an always-on bus |
 | `createAuditMiddleware` | read-only tap on the action stream |

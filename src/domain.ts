@@ -18,7 +18,7 @@ import {
 
 /**
  * A domain owns one piece of state and everything that happens to it: how actions change it, what
- * async work they trigger, what is derived from it, and what should happen when it changes.
+ * async work they trigger, what is recomputed from it, and what should happen when it changes.
  *
  * It is the only unit in this kit. A global store hosts many domains on a shared action bus; a
  * component hosts one on a private bus. The domain itself does not know which, and every capability
@@ -190,8 +190,8 @@ export function defineDomain<
 
   /**
    * The reduce, written once and used by both hosts: look the handler up, allow a constant partial,
-   * treat `undefined` as no change, diff before merging, and recompute derived values only when
-   * something actually moved.
+   * treat `undefined` as no change, diff before merging, and run `recompute` only when something
+   * actually moved.
    */
   const applyReduce = (state: TState, action: any): TState => {
     const handler = reduceHandlers.get(action.type)

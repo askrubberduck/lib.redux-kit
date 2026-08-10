@@ -55,8 +55,7 @@
     "check:types": "tsc -p test/tsconfig.json --noEmit"
   },
   "dependencies": {
-    "dequal": "^2.0.3",
-    "setimmediate": "^1.0.5"
+    "dequal": "^2.0.3"
   },
   "peerDependencies": {
     "react": ">=17",
@@ -79,7 +78,6 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/setimmediate": "^1.0.4",
     "chai": "^6.2.2",
     "dpdm": "^4.3.0",
     "mocha": "^11.8.0",

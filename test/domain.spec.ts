@@ -284,13 +284,13 @@ describe('defineDomain', () => {
       return panel
     }
 
-    it('folds and derives identically when hosted by a component', () => {
+    it('folds and recomputes identically when hosted by a component', () => {
       const next = makePanel().$.runLocal(initialCartState, { type: 'CART_ADD_ITEM', sku: 'a', quantity: 1 }, async () => undefined)
 
       expect(next.itemCount).to.equal(1)
     })
 
-    it('folds and derives identically when hosted by a store', () => {
+    it('folds and recomputes identically when hosted by a store', () => {
       const store = createTestStore<any, any>({ domains: [makePanel()] })
       store.dispatch({ type: 'CART_ADD_ITEM', sku: 'a', quantity: 1 })
 
