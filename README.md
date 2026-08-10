@@ -65,9 +65,9 @@ creators — you write the action union and dispatch plain objects.
 npm install @askrubberduck/redux-kit
 ```
 
-`lodash` is a required peer and `setimmediate` a dependency; both load with the root entry, which
-pulls in neither redux nor React. Add `react` for `/react`, `react-redux` for `/redux`, and `redux`
-for `/store`.
+There are no required peers. The root entry carries `dequal` and `setimmediate` itself and pulls in
+neither redux nor React. Add `react` for `/react`, `react-redux` for `/redux`, and `redux` for
+`/store` — each is an optional peer, declared so npm does not install one you never import.
 
 ## A domain
 

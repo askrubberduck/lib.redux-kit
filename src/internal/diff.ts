@@ -1,4 +1,4 @@
-import isEqual from 'lodash/isEqual'
+import { dequal as isEqual } from 'dequal'
 
 /**
  * Whether any entry of `next` differs from `current`. Used to decide whether a reducer produced

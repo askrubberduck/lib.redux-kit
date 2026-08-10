@@ -55,10 +55,10 @@
     "check:types": "tsc -p test/tsconfig.json --noEmit"
   },
   "dependencies": {
+    "dequal": "^2.0.3",
     "setimmediate": "^1.0.5"
   },
   "peerDependencies": {
-    "lodash": "^4.17.21",
     "react": ">=17",
     "react-redux": ">=8",
     "redux": ">=4"
@@ -76,14 +76,12 @@
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
-    "@types/lodash": "^4.17.25",
     "@types/mocha": "^10.0.10",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/setimmediate": "^1.0.4",
     "chai": "^6.2.2",
     "dpdm": "^4.3.0",
-    "lodash": "^4.18.1",
     "mocha": "^11.8.0",
     "prettier": "^3.9.6",
     "react": "^18.3.1",
