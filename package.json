@@ -2,6 +2,23 @@
   "name": "@askrubberduck/redux-kit",
   "version": "0.7.0",
   "description": "A small toolkit for redux stores: reducers, effects, watchers, subscriptions, local stores and action versioning.",
+  "keywords": [
+    "redux",
+    "react-redux",
+    "zustand",
+    "react",
+    "typescript",
+    "state-management",
+    "store",
+    "reducer",
+    "effects",
+    "selectors",
+    "middleware",
+    "subscriptions",
+    "websocket",
+    "local-state",
+    "react-hooks"
+  ],
   "author": "askrubberduck",
   "license": "MIT",
   "repository": {
